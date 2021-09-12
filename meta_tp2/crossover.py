@@ -16,7 +16,7 @@ def uniform(individual_1, individual_2):
 def one_point(individual_1, individual_2):
   children_01, children_02 = copy.copy(individual_1), copy.copy(individual_2)
 
-  cutIndex = random.randint(1, len(individual_1.value) - 1)
+  cut_index = random.randint(1, len(individual_1.value) - 1)
 
-  children_01[cutIndex:], children_02[cutIndex:] = individual_2[cutIndex:], individual_1[cutIndex:]
+  children_01[cut_index:], children_02[cut_index:] = individual_2[cut_index:], individual_1[cut_index:]
   return children_01, children_02

@@ -1,35 +1,35 @@
 import random
 
-def tournament(population, selectionSize, tournamentSize):
+def tournament(population, selection_size, tournament_size):
   if len(population) == 0: return []
-  tournamentResult = []
+  tournament_result = []
 
-  for i in range(selectionSize):
-    randomSelection = random.sample(population, k=tournamentSize)
+  for i in range(selection_size):
+    random_selection = random.sample(population, k=tournament_size)
 
-    best = randomSelection[0]
-    for individual in randomSelection:
+    best = random_selection[0]
+    for individual in random_selection:
         if individual.fitness > best.fitness:
             best = individual
-    tournamentResult.append(best)
+    tournament_result.append(best)
 
-  return tournamentResult
+  return tournament_result
 
-def roulette(population, selectionSize):
-    populationFitnessSum = 0
+def roulette(population, selection_size):
+    population_fitness_sum = 0
     for individual in population:
-        populationFitnessSum += individual.fitness
+        population_fitness_sum += individual.fitness
 
-    rouletteResult = []
+    roulette_result = []
 
-    for i in range(selectionSize):
-        randomValue = random.uniform(0, populationFitnessSum)
+    for i in range(selection_size):
+        random_value = random.uniform(0, population_fitness_sum)
 
-        iterationFitnessSum = 0
+        iteration_fitness_sum = 0
         for individual in population:
-            iterationFitnessSum += individual.fitness
-            if iterationFitnessSum >= randomValue:
-                rouletteResult.append(individual)
+            iteration_fitness_sum += individual.fitness
+            if iteration_fitness_sum >= random_value:
+                roulette_result.append(individual)
                 break
 
-    return rouletteResult
+    return roulette_result
