@@ -1,7 +1,6 @@
 import random
 from enum import Enum
 
-
 def tournament(population, selection_size, tournament_size):
     if len(population) == 0:
         return []

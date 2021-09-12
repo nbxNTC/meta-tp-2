@@ -49,7 +49,6 @@ class Generation(object):
             "best": sorted(self.population, key=attrgetter("fitness"), reverse=True)[0],
         }
 
-
 def generate_initial_generation(ind_generator: function, pop_size: int = 100):
     pop = [ind_generator() for _i in range(pop_size)]
     return Generation(number=0, population=pop)
