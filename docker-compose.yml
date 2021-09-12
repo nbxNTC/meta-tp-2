@@ -1,0 +1,9 @@
+version: 3
+
+services:
+  meta_tp2:
+    build: .
+    image: meta_tp2
+    container_name: meta_tp2
+    volumes:
+      - ./:/code
