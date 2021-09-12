@@ -9,7 +9,7 @@ for i in range(5):
     individual.fitness = individual.value[0] + individual.value[1]
     population.append(individual)
 
-tournamentResult = tournament(population, len(population))
+tournamentResult = tournament(population, len(population), 3)
 print(len(tournamentResult))
 
 rouletteResult = roulette(population, len(population))
