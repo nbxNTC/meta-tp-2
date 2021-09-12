@@ -1,18 +1,21 @@
 import random
+from enum import Enum
+
 
 def tournament(population, selectionSize, tournamentSize):
-  tournamentResult = []
+    tournamentResult = []
 
-  for i in range(selectionSize):
-    randomSelection = random.sample(population, k=tournamentSize)
+    for i in range(selectionSize):
+        randomSelection = random.sample(population, k=tournamentSize)
 
-    best = randomSelection[0]
-    for individual in randomSelection:
-        if individual.fitness < best.fitness:
-            best = individual
-    tournamentResult.append(best)
+        best = randomSelection[0]
+        for individual in randomSelection:
+            if individual.fitness < best.fitness:
+                best = individual
+        tournamentResult.append(best)
 
-  return tournamentResult
+    return tournamentResult
+
 
 def roulette(population, selectionSize):
     populationFitnessSum = 0
@@ -32,3 +35,8 @@ def roulette(population, selectionSize):
                 break
 
     return rouletteResult
+
+
+class SelectionType(Enum):
+    TOURNAMENT = tournament
+    ROULETTE = roulette
