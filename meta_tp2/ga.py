@@ -1,4 +1,4 @@
-FloatList = list[float]
+from typing import List
 
 
 class Individual:
@@ -24,7 +24,7 @@ class Individual:
 
     kind = "float"
 
-    def __init__(self, value: FloatList = [], generation: int = 0) -> None:
+    def __init__(self, value: List[float] = [], generation: int = 0) -> None:
         self.fitness = None
         self.value = value
         self.generation = generation
