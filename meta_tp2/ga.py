@@ -33,7 +33,9 @@ class Individual(object):
         self.generation = generation
 
     def __format__(self, format_spec: str) -> str:
-        return "f({}) = {}".format(str(self.value), str(self.fitness))
+        return "{} in gen {}, fit({}) -> {:.6f}".format(
+            id(self), self.generation, str(self.value), self.fitness
+        )
 
 
 class Generation(object):
@@ -55,21 +57,41 @@ class Generation(object):
 
     def print_stats(self):
         self.evaluate_stats()
-        print("~~~ GERAÇÃO {} ~~~".format(self.number))
-        data = reduce(
-            lambda x, y: x + y, [list(self.stats.keys()), list(self.stats.values())]
+        row = reduce(
+            lambda x, y: x + y, [list(self.stats.values())], [str(self.number)]
         )
-        print_table(data, 5, 20)
+
+        if self.number == 0:
+            col = reduce(lambda x, y: x + y, [list(self.stats.keys())], ["gen"])
+            print_table_header(col, 10)
+
+        print_table_row(row, 10)
 
 
-def print_table(data, cols, wide):
-    """Prints formatted data on columns of given width."""
-    n, r = divmod(len(data), cols)
-    pat = "{{:{}}} ".format(wide)
-    line = "\n".join(pat * cols for _ in range(n))
-    last_line = pat * r
-    print(line.format(*data))
-    print(last_line.format(*data[n * cols :]))
+def format_tabular(data, wide):
+    if type(data) == str:
+        return "{{: ^{}s}}".format(wide).format(data)
+    return "{{:{}f}}".format(wide).format(data)
+
+
+def print_table_header(col, wide):
+    column = " ║ ".join(format_tabular(i, wide) for i in col)
+
+    print("".join("═" for _ in range(wide * (3 + len(col)))))
+    print(column)
+
+
+def print_table_row(row, wide):
+    data = " ║ ".join(format_tabular(i, wide) for i in row)
+    print(data)
+
+    # cols = len(col)
+
+    # """Prints formatted data on columns of given width."""
+    # pat = "{{:{}f}} ".format(wide)
+    # line = "\n".join(pat * cols for _ in range(cols))
+    # print(line.format(*col))
+    # print(line.format(*col))
 
 
 def generate_initial_generation(ind_generator: Callable, pop_size: int = 100):
