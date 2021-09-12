@@ -1,6 +1,5 @@
 from typing import List
 
-
 class Individual:
     """
     A class used to represent an Individual in float-based Genetic Algorithms

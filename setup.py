@@ -4,7 +4,6 @@ from meta_tp2.version import Version
 with open("requirements.txt") as f:
     required = f.read().splitlines()
 
-
 setuptools.setup(
     name="meta_tp2",
     version=Version("1.0.0").number,
