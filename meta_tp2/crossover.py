@@ -1,8 +1,7 @@
+from enum import Enum
 from meta_tp2.ga import Individual
 import random
 import copy
-from enum import Enum
-
 
 def uniform(individual_1, individual_2):
     children_01, children_02 = Individual(), Individual()

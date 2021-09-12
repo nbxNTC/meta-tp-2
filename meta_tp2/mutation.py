@@ -1,3 +1,4 @@
+from enum import Enum
 import random
 
 def uniform(children, max_noise_size):
@@ -9,3 +10,6 @@ def uniform(children, max_noise_size):
   children.value[random_index] += noise * multiplying_factor
 
   return children
+
+class MutationType(Enum):
+    UNIFORM = uniform
