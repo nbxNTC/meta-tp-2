@@ -1,6 +1,6 @@
 import random
 import math
-from meta_tp2.ga import Individual, generate_initial_generation
+from meta_tp2.ga import Generation, Individual, generate_initial_generation
 from meta_tp2.selection import SelectionType
 from meta_tp2.crossover import CrossoverType
 from meta_tp2.mutation import MutationType
@@ -53,7 +53,7 @@ def get_best_fitness(population):
 
 generation = generate_initial_generation(individual_generation, POPULATION_SIZE)
 evaluate_population(generation.population)
-best_fitness = get_best_fitness(generation.population)
+generation.print_stats()
 
 while (True):
   selected = SELECTION(generation.population, SELECTION_SIZE, TOURNAMENT_SIZE)
@@ -74,6 +74,6 @@ while (True):
 
   evaluate_population(offspring)
   generation = Generation(generation.number + 1, offspring)
-  offspring_best_fitness = get_best_fitness(generation.population)
 
+  generation.print_stats()
   if (generation.number == MAX_GENERATION): break
