@@ -1,5 +1,6 @@
-from typing import List
+from typing import List, Callable
 from operator import attrgetter
+from functools import reduce
 import numpy as np
 
 
@@ -31,6 +32,9 @@ class Individual(object):
         self.value = value
         self.generation = generation
 
+    def __format__(self, format_spec: str) -> str:
+        return "f({}) = {}".format(str(self.value), str(self.fitness))
+
 
 class Generation(object):
     def __init__(self, number: int, population: List[Individual]):
@@ -49,7 +53,24 @@ class Generation(object):
             "best": sorted(self.population, key=attrgetter("fitness"), reverse=True)[0],
         }
 
+    def print_stats(self):
+        print("~~~ GERAÇÃO {} ~~~".format(self.number))
+        data = reduce(
+            lambda x, y: x + y, [list(self.stats.keys()), list(self.stats.values())]
+        )
+        print_table(data, 5, 20)
 
-def generate_initial_generation(ind_generator: function, pop_size: int = 100):
+
+def print_table(data, cols, wide):
+    """Prints formatted data on columns of given width."""
+    n, r = divmod(len(data), cols)
+    pat = "{{:{}}} ".format(wide)
+    line = "\n".join(pat * cols for _ in range(n))
+    last_line = pat * r
+    print(line.format(*data))
+    print(last_line.format(*data[n * cols :]))
+
+
+def generate_initial_generation(ind_generator: Callable, pop_size: int = 100):
     pop = [ind_generator() for _i in range(pop_size)]
     return Generation(number=0, population=pop)
