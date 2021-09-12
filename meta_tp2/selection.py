@@ -1,6 +1,7 @@
 import random
 
 def tournament(population, selectionSize, tournamentSize):
+  if len(population) == 0: return []
   tournamentResult = []
 
   for i in range(selectionSize):
@@ -8,7 +9,7 @@ def tournament(population, selectionSize, tournamentSize):
 
     best = randomSelection[0]
     for individual in randomSelection:
-        if individual.fitness < best.fitness:
+        if individual.fitness > best.fitness:
             best = individual
     tournamentResult.append(best)
 
