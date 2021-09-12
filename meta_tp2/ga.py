@@ -54,6 +54,7 @@ class Generation(object):
         }
 
     def print_stats(self):
+        self.evaluate_stats()
         print("~~~ GERAÇÃO {} ~~~".format(self.number))
         data = reduce(
             lambda x, y: x + y, [list(self.stats.keys()), list(self.stats.values())]
