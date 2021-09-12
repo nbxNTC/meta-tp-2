@@ -11,7 +11,7 @@ from meta_tp2.mutation import MutationType
 #
 
 # Need to maximize = 1 / Need to minimize = -1
-MULTIPLYING_FACTOR = 1
+MULTIPLYING_FACTOR = -1
 RESTRICTION_01_PENALTY = 10
 RESTRICTION_02_PENALTY = 10
 
@@ -61,7 +61,7 @@ def get_best_fitness(population):
 
 generation = generate_initial_generation(individual_generation, POPULATION_SIZE)
 evaluate_population(generation.population)
-best_fitness = get_best_fitness(generation.population)
+generation.print_stats()
 
 while True:
     selected = SELECTION(generation.population, SELECTION_SIZE, TOURNAMENT_SIZE)
@@ -82,8 +82,7 @@ while True:
 
     evaluate_population(offspring)
     generation = Generation(generation.number + 1, offspring)
-    offspring_best_fitness = get_best_fitness(generation.population)
-    generation.print_stats()
 
+    generation.print_stats()
     if generation.number == MAX_GENERATION:
         break
