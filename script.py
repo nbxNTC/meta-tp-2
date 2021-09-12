@@ -1,9 +1,12 @@
 # from meta_tp2.ga import Individual
+from meta_tp2.selection import tournament
+from meta_tp2.ga import Individual
 
-test = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-# population = [{ x: 1, y: 2, fitness: 3 }, { x: 3, y: 2, fitness: 5 }]
+population = []
+for i in range(5):
+    individual = Individual([i, i + 1])
+    individual.fitness = individual.value[0] + individual.value[1]
+    population.append(individual)
 
-# a = Individual([1, 2])
-# print(a)
-
-tournament(test, 4)
+tournamentResult = tournament(population, 4)
+print(len(tournamentResult))
