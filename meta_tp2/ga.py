@@ -63,15 +63,15 @@ class Generation(object):
 
         if self.number == 0:
             col = reduce(lambda x, y: x + y, [list(self.stats.keys())], ["gen"])
-            print_table_header(col, 10)
+            print_table_header(col, 11)
 
-        print_table_row(row, 10)
+        print_table_row(row, 11)
 
 
 def format_tabular(data, wide):
     if type(data) == str:
         return "{{: ^{}s}}".format(wide).format(data)
-    return "{{:{}f}}".format(wide).format(data)
+    return "{{:{}}}".format(wide).format("{:.6f}".format(data))
 
 
 def print_table_header(col, wide):
