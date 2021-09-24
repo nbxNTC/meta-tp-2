@@ -1,6 +1,7 @@
 import random
 from enum import Enum
 
+
 def tournament(population, selection_size, tournament_size):
     if len(population) == 0:
         return []
@@ -18,7 +19,7 @@ def tournament(population, selection_size, tournament_size):
     return tournament_result
 
 
-def roulette(population, selection_size):
+def roulette(population, selection_size, _n):
     population_fitness_sum = 0
     for individual in population:
         population_fitness_sum += individual.fitness

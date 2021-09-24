@@ -29,12 +29,18 @@ class Individual(object):
 
     def __init__(self, value: List[float] = [], generation: int = 0) -> None:
         self.fitness = None
+        self.objective_function_value = None
+
         self.value = value
         self.generation = generation
 
     def __format__(self, format_spec: str) -> str:
-        return "{} in gen {}, fit({}) -> {:.6f}".format(
-            id(self), self.generation, str(self.value), self.fitness
+        return "#{} in gen {}, fit({}) -> {:.6f}, obj = {:.6f}".format(
+            str(id(self))[-5:],
+            self.generation,
+            str(self.value),
+            self.fitness,
+            self.objective_function_value,
         )
 
 
