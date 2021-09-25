@@ -22,13 +22,13 @@ from meta_tp2.mutation import MutationType
 #
 
 # Parâmetros
-POPULATION_SIZE = 500
+POPULATION_SIZE = 50
 CROSSOVER_RATE = 0.9
 MUTATION_RATE = 0.05
 SELECTION_SIZE = POPULATION_SIZE
-TOURNAMENT_SIZE = 10
+TOURNAMENT_SIZE = 5
 SELECTION = SelectionType.TOURNAMENT
-CROSSOVER = CrossoverType.UNIFORM
+CROSSOVER = CrossoverType.ONE_POINT
 MUTATION = MutationType.UNIFORM
 MAX_NOISE_SIZE = 0.2
 MAX_GENERATION = 500
@@ -124,7 +124,7 @@ def fitness(generating_units):
 
     return (
         MULTIPLYING_FACTOR * (sum(objective_function_values) + penalty),
-        objective_function_values,
+        sum(objective_function_values),
     )
 
 
@@ -227,4 +227,4 @@ for i in range(30):
     best_of_runs.append(bof)
 
 df = pd.DataFrame(best_of_runs)
-df.to_json("./results/2_a_{}.json".format(datetime.datetime.now().isoformat()))
+df.to_json("./results/2_b_{}.json".format(datetime.datetime.now().isoformat()))
