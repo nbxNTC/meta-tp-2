@@ -11,16 +11,6 @@ from meta_tp2.selection import SelectionType
 from meta_tp2.crossover import CrossoverType
 from meta_tp2.mutation import MutationType
 
-#
-# Minimizar (x1 - 10)^3 + (x2 - 20)^3
-# sujeito a:
-#  -(x1 - 5)^2 - (x2 - 5)^2 + 100 ≤ 0
-# (x1 - 6)^2 + (x2 - 5)^2 - 82.81 ≤ 0
-#
-# Dominio x1 em [13, 100]
-# Dominio x2 em [0, 100]
-#
-
 # Parâmetros
 POPULATION_SIZE = 500
 CROSSOVER_RATE = 0.9
@@ -37,11 +27,7 @@ MULTIPLYING_FACTOR = -1
 RESTRICTION_DOMIAN_PENALTY = 25000
 
 
-def objective_function(p_min, p, a, b, c, e, f):
-    return (a * math.pow(p, 2)) + (b * p) + c + abs(e * math.sin(f * (p_min - p)))
-
-
-class function_variables:
+class constants:
     def __init__(self, a, b, c, e, f):
         self.a = a
         self.b = b
@@ -50,20 +36,20 @@ class function_variables:
         self.f = f
 
 
-generating_units_variables = [
-    function_variables(0.00028, 8.10, 550, 300, 0.035),
-    function_variables(0.00056, 8.10, 309, 200, 0.042),
-    function_variables(0.00056, 8.10, 307, 150, 0.042),
-    function_variables(0.00324, 7.74, 240, 150, 0.063),
-    function_variables(0.00324, 7.74, 240, 150, 0.063),
-    function_variables(0.00324, 7.74, 240, 150, 0.063),
-    function_variables(0.00324, 7.74, 240, 150, 0.063),
-    function_variables(0.00324, 7.74, 240, 150, 0.063),
-    function_variables(0.00324, 7.74, 240, 150, 0.063),
-    function_variables(0.00284, 8.60, 126, 100, 0.084),
-    function_variables(0.00284, 8.60, 126, 100, 0.084),
-    function_variables(0.00284, 8.60, 126, 100, 0.084),
-    function_variables(0.00284, 8.60, 126, 100, 0.084),
+generating_units_constants = [
+    constants(0.00028, 8.10, 550, 300, 0.035),
+    constants(0.00056, 8.10, 309, 200, 0.042),
+    constants(0.00056, 8.10, 307, 150, 0.042),
+    constants(0.00324, 7.74, 240, 150, 0.063),
+    constants(0.00324, 7.74, 240, 150, 0.063),
+    constants(0.00324, 7.74, 240, 150, 0.063),
+    constants(0.00324, 7.74, 240, 150, 0.063),
+    constants(0.00324, 7.74, 240, 150, 0.063),
+    constants(0.00324, 7.74, 240, 150, 0.063),
+    constants(0.00284, 8.60, 126, 100, 0.084),
+    constants(0.00284, 8.60, 126, 100, 0.084),
+    constants(0.00284, 8.60, 126, 100, 0.084),
+    constants(0.00284, 8.60, 126, 100, 0.084),
 ]
 
 
@@ -90,6 +76,25 @@ restrictions_domains = [
 ]
 
 
+def objective_function(generating_units):
+    objective_function_value = 0
+    for i in range(len(generating_units)):
+        p = generating_units[i]
+        a, b, c, e, f = (
+            generating_units_constants[i].a,
+            generating_units_constants[i].b,
+            generating_units_constants[i].c,
+            generating_units_constants[i].e,
+            generating_units_constants[i].f,
+        )
+        p_min = restrictions_domains[i].p_min
+        objective_function_value += (
+            (a * math.pow(p, 2)) + (b * p) + c + abs(e * math.sin(f * (p_min - p)))
+        )
+
+    return objective_function_value
+
+
 def restriction_domain(generating_unit, p):
     if (
         p < restrictions_domains[generating_unit].p_min
@@ -108,23 +113,11 @@ def fitness(generating_units):
     if penalty > 0:
         return None, None
 
-    objective_function_values = []
-    for i in range(len(generating_units)):
-        objective_function_values.append(
-            objective_function(
-                restrictions_domains[i].p_min,
-                generating_units[i],
-                generating_units_variables[i].a,
-                generating_units_variables[i].b,
-                generating_units_variables[i].c,
-                generating_units_variables[i].e,
-                generating_units_variables[i].f,
-            )
-        )
+    objective_function_value = objective_function(generating_units)
 
     return (
-        MULTIPLYING_FACTOR * (sum(objective_function_values) + penalty),
-        sum(objective_function_values),
+        MULTIPLYING_FACTOR * (objective_function_value + penalty),
+        objective_function_value,
     )
 
 
@@ -139,9 +132,9 @@ def individual_generation(gen=0):
 
 
 def evaluate_individual(individual):
-    fit, obj_fun_values = fitness(individual.value)
+    fit, obj_fun_value = fitness(individual.value)
     individual.fitness = fit
-    individual.objective_function_value = obj_fun_values
+    individual.objective_function_value = obj_fun_value
 
 
 def evaluate_population(population):
