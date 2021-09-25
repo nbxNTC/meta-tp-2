@@ -41,37 +41,52 @@ def objective_function(p_min, p, a, b, c, e, f):
     return (a * math.pow(p, 2)) + (b * p) + c + abs(e * math.sin(f * (p_min - p)))
 
 
+class function_variables:
+    def __init__(self, a, b, c, e, f):
+        self.a = a
+        self.b = b
+        self.c = c
+        self.e = e
+        self.f = f
+
+
 generating_units_variables = [
-    {a: 0.00028, b: 8.10, c: 550, e: 300, f: 0.035},
-    {a: 0.00056, b: 8.10, c: 309, e: 200, f: 0.042},
-    {a: 0.00056, b: 8.10, c: 307, e: 150, f: 0.042},
-    {a: 0.00324, b: 7.74, c: 240, e: 150, f: 0.063},
-    {a: 0.00324, b: 7.74, c: 240, e: 150, f: 0.063},
-    {a: 0.00324, b: 7.74, c: 240, e: 150, f: 0.063},
-    {a: 0.00324, b: 7.74, c: 240, e: 150, f: 0.063},
-    {a: 0.00324, b: 7.74, c: 240, e: 150, f: 0.063},
-    {a: 0.00324, b: 7.74, c: 240, e: 150, f: 0.063},
-    {a: 0.00284, b: 8.60, c: 126, e: 100, f: 0.084},
-    {a: 0.00284, b: 8.60, c: 126, e: 100, f: 0.084},
-    {a: 0.00284, b: 8.60, c: 126, e: 100, f: 0.084},
-    {a: 0.00284, b: 8.60, c: 126, e: 100, f: 0.084},
+    function_variables(0.00028, 8.10, 550, 300, 0.035),
+    function_variables(0.00056, 8.10, 309, 200, 0.042),
+    function_variables(0.00056, 8.10, 307, 150, 0.042),
+    function_variables(0.00324, 7.74, 240, 150, 0.063),
+    function_variables(0.00324, 7.74, 240, 150, 0.063),
+    function_variables(0.00324, 7.74, 240, 150, 0.063),
+    function_variables(0.00324, 7.74, 240, 150, 0.063),
+    function_variables(0.00324, 7.74, 240, 150, 0.063),
+    function_variables(0.00324, 7.74, 240, 150, 0.063),
+    function_variables(0.00284, 8.60, 126, 100, 0.084),
+    function_variables(0.00284, 8.60, 126, 100, 0.084),
+    function_variables(0.00284, 8.60, 126, 100, 0.084),
+    function_variables(0.00284, 8.60, 126, 100, 0.084),
 ]
 
 
+class domain:
+    def __init__(self, p_min, p_max):
+        self.p_min = p_min
+        self.p_max = p_max
+
+
 restrictions_domains = [
-    {p_min: 0, p_max: 680},
-    {p_min: 0, p_max: 360},
-    {p_min: 0, p_max: 360},
-    {p_min: 60, p_max: 180},
-    {p_min: 60, p_max: 180},
-    {p_min: 60, p_max: 180},
-    {p_min: 60, p_max: 180},
-    {p_min: 60, p_max: 180},
-    {p_min: 60, p_max: 180},
-    {p_min: 40, p_max: 120},
-    {p_min: 40, p_max: 120},
-    {p_min: 55, p_max: 120},
-    {p_min: 55, p_max: 120},
+    domain(0, 680),
+    domain(0, 360),
+    domain(0, 360),
+    domain(60, 180),
+    domain(60, 180),
+    domain(60, 180),
+    domain(60, 180),
+    domain(60, 180),
+    domain(60, 180),
+    domain(40, 120),
+    domain(40, 120),
+    domain(55, 120),
+    domain(55, 120),
 ]
 
 
@@ -87,14 +102,14 @@ def restriction_domain(generating_unit, p):
 
 def fitness(generating_units):
     penalty = 0
-    for i in len(range(generating_units)):
+    for i in range(len(generating_units)):
         penalty += restriction_domain(i, generating_units[i])
 
     if penalty > 0:
         return None, None
 
     objective_function_values = []
-    for i in len(range(generating_units)):
+    for i in range(len(generating_units)):
         objective_function_values.append(
             objective_function(
                 restrictions_domains[i].p_min,
