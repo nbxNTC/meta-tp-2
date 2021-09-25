@@ -38,3 +38,6 @@ htmlcov
 .project
 .pydevproject
 .DS_Store
+
+results/**/*.json
+.ipynb_checkpoints

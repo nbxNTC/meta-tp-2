@@ -1,7 +1,11 @@
+import datetime
+from operator import attrgetter
 import random
 import math
 
 import numpy as np
+import pandas as pd
+
 from meta_tp2.ga import Generation, Individual, generate_initial_generation
 from meta_tp2.selection import SelectionType
 from meta_tp2.crossover import CrossoverType
@@ -102,45 +106,73 @@ def get_best_fitness(population):
             new_best_fitness = individual.fitness
 
 
-generation = generate_initial_generation(individual_generation, POPULATION_SIZE)
-evaluate_population(generation.population)
-for i in range(len(generation.population)):
-    while generation.population[i].fitness is None:
-        generation.population[i] = individual_generation(gen=generation.number)
-        evaluate_individual(generation.population[i])
+def run(run_index, debug=False):
+    df_data = []
+
+    generation = generate_initial_generation(individual_generation, POPULATION_SIZE)
+    evaluate_population(generation.population)
+    for i in range(len(generation.population)):
+        while generation.population[i].fitness is None:
+            generation.population[i] = individual_generation(gen=generation.number)
+            evaluate_individual(generation.population[i])
+
+    if debug:
+        generation.print_stats()
+    generation.evaluate_stats()
+    stats_data = generation.stats
+    stats_data["gen"] = generation.number
+    stats_data["best"] = "{}".format(stats_data["best"])
+    df_data.append(stats_data)
+
+    while True:
+        selected = SELECTION(generation.population, SELECTION_SIZE, TOURNAMENT_SIZE)
+
+        offspring = []
+        for individual_01, individual_02 in zip(selected[0::2], selected[1::2]):
+            if random.uniform(0, 1) < CROSSOVER_RATE:
+                children_01, children_02 = CROSSOVER(individual_01, individual_02)
+
+                children_01.generation = generation.number
+                children_02.generation = generation.number
+
+                offspring.append(children_01)
+                offspring.append(children_02)
+            else:
+                offspring.append(individual_01)
+                offspring.append(individual_02)
+
+        for individual in offspring:
+            if random.uniform(0, 1) < MUTATION_RATE:
+                individual = MUTATION(individual, MAX_NOISE_SIZE)
+
+        evaluate_population(offspring)
+        for i in range(len(offspring)):
+            while offspring[i].fitness is None:
+                offspring[i] = individual_generation(gen=generation.number)
+                evaluate_individual(offspring[i])
+
+        generation = Generation(generation.number + 1, offspring)
+        if debug:
+            generation.print_stats()
+
+        generation.evaluate_stats()
+        stats_data = generation.stats
+        stats_data["gen"] = generation.number
+        stats_data["best"] = "{}".format(stats_data["best"])
+        df_data.append(stats_data)
+
+        if generation.number == MAX_GENERATION:
+            break
+
+    df = pd.DataFrame(df_data)
+    df.to_json(
+        "./results/1_a/run_{}_{}.json".format(
+            run_index, datetime.datetime.now().isoformat()
+        )
+    )
 
 
-generation.print_stats()
-
-while True:
-    selected = SELECTION(generation.population, SELECTION_SIZE, TOURNAMENT_SIZE)
-
-    offspring = []
-    for individual_01, individual_02 in zip(selected[0::2], selected[1::2]):
-        if random.uniform(0, 1) < CROSSOVER_RATE:
-            children_01, children_02 = CROSSOVER(individual_01, individual_02)
-
-            children_01.generation = generation.number
-            children_02.generation = generation.number
-
-            offspring.append(children_01)
-            offspring.append(children_02)
-        else:
-            offspring.append(individual_01)
-            offspring.append(individual_02)
-
-    for individual in offspring:
-        if random.uniform(0, 1) < MUTATION_RATE:
-            individual = MUTATION(individual, MAX_NOISE_SIZE)
-
-    evaluate_population(offspring)
-    for i in range(len(offspring)):
-        while offspring[i].fitness is None:
-            offspring[i] = individual_generation(gen=generation.number)
-            evaluate_individual(offspring[i])
-
-    generation = Generation(generation.number + 1, offspring)
-    generation.print_stats()
-
-    if generation.number == MAX_GENERATION:
-        break
+# EXECUCOES
+for i in range(30):
+    print("Run {}".format(i))
+    run(i)
