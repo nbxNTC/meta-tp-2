@@ -157,7 +157,7 @@ def get_best_fitness(population):
 
 
 def run(run_index, debug=False):
-    df_data = []
+    best_of_run = None
 
     generation = generate_initial_generation(individual_generation, POPULATION_SIZE)
     evaluate_population(generation.population)
@@ -169,10 +169,7 @@ def run(run_index, debug=False):
     if debug:
         generation.print_stats()
     generation.evaluate_stats()
-    stats_data = generation.stats
-    stats_data["gen"] = generation.number
-    stats_data["best"] = "{}".format(stats_data["best"])
-    df_data.append(stats_data)
+    best_of_run = generation.stats["best"]
 
     while True:
         selected = SELECTION(generation.population, SELECTION_SIZE, TOURNAMENT_SIZE)
@@ -206,23 +203,28 @@ def run(run_index, debug=False):
             generation.print_stats()
 
         generation.evaluate_stats()
-        stats_data = generation.stats
-        stats_data["gen"] = generation.number
-        stats_data["best"] = "{}".format(stats_data["best"])
-        df_data.append(stats_data)
+        best_of_run = generation.stats["best"]
 
         if generation.number == MAX_GENERATION:
             break
 
-    df = pd.DataFrame(df_data)
-    df.to_json(
-        "./results/2_a/run_{}_{}.json".format(
-            run_index, datetime.datetime.now().isoformat()
-        )
-    )
+    return best_of_run
 
 
 # EXECUCOES
+best_of_runs = []
 for i in range(30):
     print("Run {}".format(i))
-    run(i)
+    best_of_run = run(i)
+
+    bof = {
+        "fitness": best_of_run.fitness,
+        "objective_function_value": best_of_run.objective_function_value,
+        "value": str(best_of_run.value),
+        "generation": str(best_of_run.generation),
+        "run": i,
+    }
+    best_of_runs.append(bof)
+
+df = pd.DataFrame(best_of_runs)
+df.to_json("./results/2_a_{}.json".format(datetime.datetime.now().isoformat()))
